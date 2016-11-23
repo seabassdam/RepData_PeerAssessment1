@@ -79,7 +79,8 @@ assignment so you do not have to download the data separately.
 Show any code that is needed to
 
 1. Load the data (i.e. `read.csv()`)
-```{r}
+
+```r
 # Check if file is unzipped
 filename <- "activity.zip"
 
@@ -89,7 +90,8 @@ if (!file.exists("activity.csv")) {
 ```
 
 2. Process/transform the data (if necessary) into a format suitable for your analysis
-```{r}
+
+```r
 #Load raw data
 data.raw <- read.csv("activity.csv",stringsAsFactors = FALSE)
 
@@ -113,8 +115,8 @@ For this part of the assignment, you can ignore the missing values in
 the dataset.
 
 1. Make a histogram of the total number of steps taken each day
-```{r}
 
+```r
 #Aggregate number of steps by day  
 steps <- aggregate(data.raw$steps, by=list(data.raw$date),FUN = sum, na.rm=TRUE)
 
@@ -126,19 +128,34 @@ hist(steps$x,
      main="Histogram of the total number of steps taken each day")
 ```
 
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
+
 2. Calculate and report the **mean** and **median** total number of steps taken per day
 
-```{r}
+
+```r
 #Calculations of mean and median
 mean(steps$x)
+```
+
+```
+## [1] 9354.23
+```
+
+```r
 median(steps$x)
 ```
-The mean is `r mean(steps$x)` and the median is `r median(steps$x)`.  
+
+```
+## [1] 10395
+```
+The mean is 9354.2295082 and the median is 10395.  
 
 ### What is the average daily activity pattern?
 
 1. Make a time series plot (i.e. `type = "l"`) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)  
-```{r}
+
+```r
 #Compute the mean steps across all days for each interval
 data.mean <- aggregate(data.raw$steps, by=list(data.raw$interval), FUN = mean, na.rm=TRUE)
 plot(data.mean$Group.1, 
@@ -147,17 +164,19 @@ plot(data.mean$Group.1,
      xlab="Interval", 
      ylab="Average number of steps", 
      main="Time-series of the average number of steps per intervals")
-
 ```
 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png)
+
 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?  
-```{r}
+
+```r
 #Find the position with the max interval  
 max <- which(data.mean$x == max(data.mean$x))  
 #Find which 5-minute interval 
 max_int <-data.mean[max,1]
 ```
-The 5-minute interval that contains the maximum steps, across all days, is: `r max_int`.  
+The 5-minute interval that contains the maximum steps, across all days, is: 835.  
 
 ### Imputing missing values
 
@@ -166,14 +185,16 @@ values (coded as `NA`). The presence of missing days may introduce
 bias into some calculations or summaries of the data.
 
 1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with `NA`s)  
-```{r}
+
+```r
 #Finding the number of missing values  
 na <- sum(is.na(data.raw$steps))
 ```
-The number of missing values is `r na`.  
+The number of missing values is 2304.  
 
 2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.  
-```{r}
+
+```r
 #Find NA positions  
 na.pos <- which(is.na(data.raw$steps))
 #Vector of means
@@ -182,13 +203,15 @@ na.mean <- rep(mean(data.raw$steps,na.rm=TRUE), times=length(na.pos))
 Replace all NAs with the mean of the Steps.  
 
 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
-```{r}
+
+```r
 #Replace all NAs with the mean 
 data.new <- data.raw
 data.new[na.pos,"steps"] <- na.mean
 ```
 4. Make a histogram of the total number of steps taken each day and Calculate and report the **mean** and **median** total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?  
-```{r}
+
+```r
 #Histogram with NAs replaced
 #Aggregate number of steps by day  
 steps.new <- aggregate(data.new$steps, by=list(data.new$date),FUN = sum, na.rm=TRUE)
@@ -200,14 +223,28 @@ hist(steps.new$x,
      ylim=c(0, 35), 
      main="Histogram of the total number of steps taken each day")
 ```
+
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10-1.png)
   
 The mean and median are computed using: 
-```{r}
+
+```r
 #Calculations of mean and median
 mean(steps.new$x)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median(steps.new$x)
 ```
-The mean is `r mean(steps.new$x)` and the median is `r median(steps.new$x)`.  
+
+```
+## [1] 10766.19
+```
+The mean is 1.0766189 &times; 10<sup>4</sup> and the median is 1.0766189 &times; 10<sup>4</sup>.  
   
 The values differ from the estimates from the first part of the assignment.  The replacement of the missing data with the mean increased the data values.  Therefore the histogram had a higher frequency and the mean/median are larger.  
 
@@ -222,7 +259,8 @@ the dataset with the filled-in missing values for this part.
 1. Make a panel plot containing a time series plot (i.e. `type = "l"`) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).  
 
 
-```{r}
+
+```r
 #Load lattice
 library(lattice)
 
@@ -237,8 +275,9 @@ xyplot(mean ~ interval | daytype, week,
        xlab="Interval", 
        ylab="Number of steps", 
        layout=c(1,2))
-
 ```
+
+![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12-1.png)
 
 
 ## Submitting the Assignment
